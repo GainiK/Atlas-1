@@ -72,7 +72,7 @@ def fuse_scene(path_meta, scene, voxel_size, trunc_ratio=3, max_depth=3,
     # get the dataset
     transform = transforms.Compose([transforms.ResizeImage((640,480)),
                                     transforms.ToTensor(),
-                                    transforms.InstanceToSemseg('nyu40'),
+                                    #transforms.InstanceToSemseg('nyu40'),
                                     transforms.IntrinsicsPoseToProjection(),
                                   ])
     frame_types=['depth', 'semseg'] if fuse_semseg else ['depth']
@@ -99,13 +99,11 @@ def fuse_scene(path_meta, scene, voxel_size, trunc_ratio=3, max_depth=3,
     pts = torch.cat(pts)
     pts = pts[torch.isfinite(pts[:,0])].cpu().numpy()
     # use top and bottom vol_prcnt of points plus vol_margin
-    origin = torch.as_tensor(np.quantile(pts, 1-vol_prcnt, axis=0)-vol_margin).float()
-    vol_max = torch.as_tensor(np.quantile(pts, vol_prcnt, axis=0)+vol_margin).float()
-    vol_dim = ((vol_max-origin)/(float(voxel_size)/100)).int().tolist()
-
-
+    origin=torch.FloatTensor([-0.2, -0.2, 0])
+    vol_max = torch.FloatTensor([0.2, 0.2, 0.2])
+    vol_dim = ((vol_max-origin)/(float(voxel_size)/1000000)).int().tolist()
     # initialize tsdf
-    tsdf_fusion = TSDFFusion(vol_dim, float(voxel_size)/100, origin,
+    tsdf_fusion = TSDFFusion(vol_dim, float(voxel_size)/1000000, origin,
                              trunc_ratio, device, label=fuse_semseg)
 
     # integrate frames
@@ -124,8 +122,8 @@ def fuse_scene(path_meta, scene, voxel_size, trunc_ratio=3, max_depth=3,
         tsdf_fusion.integrate(projection, depth, image, semseg)
 
     # save mesh and tsdf
-    file_name_vol = os.path.join(path_meta, scene, 'tsdf_%02d.npz'%voxel_size)
-    file_name_mesh = os.path.join(path_meta, scene, 'mesh_%02d.ply'%voxel_size)
+    file_name_vol = os.path.join(path_meta, scene, 'tsdf_%05d.npz'%voxel_size)
+    file_name_mesh = os.path.join(path_meta, scene, 'mesh_%05d.ply'%voxel_size)
     tsdf = tsdf_fusion.get_tsdf()
     tsdf.save(file_name_vol)
     mesh = tsdf.get_mesh()
@@ -136,7 +134,7 @@ def fuse_scene(path_meta, scene, voxel_size, trunc_ratio=3, max_depth=3,
 
     # update info json
     data = load_info_json(info_file)
-    data['file_name_vol_%02d'%voxel_size] = file_name_vol
+    data['file_name_vol_%05d'%voxel_size] = file_name_vol
     json.dump(data, open(info_file, 'w'))
 
 
@@ -192,7 +190,7 @@ def label_scene(path_meta, scene, voxel_size, dist_thresh=.05, verbose=2):
     kdtree = o3d.geometry.KDTreeFlann(pcd)
 
     # load tsdf volume
-    tsdf = TSDF.load(data['file_name_vol_%02d'%voxel_size])
+    tsdf = TSDF.load(data['file_name_vol_%05d'%voxel_size])
     coords = coordinates(tsdf.tsdf_vol.size(), device=torch.device('cpu'))
     coords = coords.type(torch.float) * tsdf.voxel_size + tsdf.origin.T
     mask = tsdf.tsdf_vol.abs().view(-1)<1
@@ -205,13 +203,13 @@ def label_scene(path_meta, scene, voxel_size, dist_thresh=.05, verbose=2):
             instance_vol[i] = instance_verts[inds[0]]
 
     tsdf.attribute_vols['instance'] = instance_vol.view(list(tsdf.tsdf_vol.size()))
-    tsdf.save(data['file_name_vol_%02d'%voxel_size])
+    tsdf.save(data['file_name_vol_%05d'%voxel_size])
 
-    key = 'vol_%02d'%voxel_size
+    key = 'vol_%05d'%voxel_size
     temp_data = {key:tsdf, 'instances':data['instances'], 'dataset':data['dataset']}
     tsdf = transforms.InstanceToSemseg('nyu40')(temp_data)[key]
     mesh = tsdf.get_mesh('semseg')
-    fname = data['file_name_vol_%02d'%voxel_size]
+    fname = data['file_name_vol_%05d'%voxel_size]
     mesh.export(fname.replace('tsdf', 'mesh').replace('.npz','_semseg.ply'))
 
 
@@ -252,10 +250,10 @@ def prepare_scannet(path, path_meta, i=0, n=1, test_only=False, max_depth=3):
 
     for scene in scenes:
         prepare_scannet_scene(scene, path, path_meta)
-        for voxel_size in [4,8,16]:
-            fuse_scene(path_meta, scene, voxel_size, device=i%8, max_depth=max_depth)
-            if scene.split('/')[0]=='scans':
-                label_scene(path_meta, scene, voxel_size)
+        for voxel_size in [3125, 6250, 12500]:
+            fuse_scene(path_meta, scene, voxel_size, max_depth=max_depth)
+            # if scene.split('/')[0]=='scans':
+            #     label_scene(path_meta, scene, voxel_size)
 
 
 
@@ -324,7 +322,27 @@ if __name__ == "__main__":
     assert 0<=i and i<n
 
     if args.dataset == 'sample':
-        scenes = ['sample1']
+        scenes = ['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6','sample7', 'sample8', 'sample9', 'sample10', 'sample11','sample12', 'sample13', 'sample14', 'sample15', 'sample16',
+       'sample17', 'sample18', 'sample19', 'sample20', 'sample21','sample22', 'sample23', 'sample24', 'sample25', 'sample26','sample27', 'sample28', 'sample29', 'sample30', 'sample31',
+       'sample32', 'sample33', 'sample34', 'sample35', 'sample36','sample37', 'sample38', 'sample39', 'sample40', 'sample41','sample42', 'sample43', 'sample44', 'sample45', 'sample46',
+       'sample47', 'sample48', 'sample49', 'sample50', 'sample51','sample52', 'sample53', 'sample54', 'sample55', 'sample56',
+       'sample57', 'sample58', 'sample59', 'sample60', 'sample61',
+       'sample62', 'sample63', 'sample64', 'sample65', 'sample66',
+       'sample67', 'sample68', 'sample69', 'sample70', 'sample71',
+       'sample72', 'sample73', 'sample74', 'sample75', 'sample76',
+       'sample77', 'sample78', 'sample79', 'sample80', 'sample81',
+       'sample82', 'sample83', 'sample84', 'sample85', 'sample86',
+       'sample87', 'sample88', 'sample89', 'sample90', 'sample91',
+       'sample92', 'sample93', 'sample94', 'sample95', 'sample96',
+       'sample97', 'sample98', 'sample99', 'sample100']
+        '''
+        scenes = ['sample100', 'sample101',
+       'sample102', 'sample103', 'sample104', 'sample105', 'sample106',
+       'sample107', 'sample108', 'sample109', 'sample110', 'sample111',
+       'sample112', 'sample113', 'sample114', 'sample115', 'sample116',
+       'sample117', 'sample118', 'sample119', 'sample120', 'sample121',
+       'sample122', 'sample123', 'sample124', 'sample125']
+        '''
         scenes = scenes[i::n] # distribute among workers
         for scene in scenes:
             prepare_sample_scene(

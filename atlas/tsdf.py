@@ -127,7 +127,18 @@ class TSDF():
         Returns:
             TSDF
         """
-        
+        # # #print('fname123', fname)
+        # tsdf_vol = np.load(fname)
+        # voxel_size = 0.008
+        # if "32x32x16" in fname:
+        #     voxel_size = 0.016
+        # elif "16x16x8" in fname:
+        #     voxel_size = 0.032
+        # #print("voxel_size", voxel_size)
+        # origin = torch.as_tensor([-0.256, -0.256, 0]).view(1,3)
+        # ret = cls(voxel_size, origin, torch.from_numpy(tsdf_vol), {}, {})
+        # # #print('ts', ts)
+
         with np.load(fname) as data:
             voxel_size = data['voxel_size'].item()
             origin = torch.as_tensor(data['origin']).view(1,3)
@@ -136,8 +147,8 @@ class TSDF():
             attributes     = {}
             if 'color' in data and (voxel_types is None or 'color' in voxel_types):
                 attribute_vols['color'] = torch.as_tensor(data['color'])
-            if ('instance' in data and (voxel_types is None or 
-                                        'instance' in voxel_types or 
+            if ('instance' in data and (voxel_types is None or
+                                        'instance' in voxel_types or
                                         'semseg' in voxel_types)):
                 attribute_vols['instance'] = torch.as_tensor(data['instance'])
             ret = cls(voxel_size, origin, tsdf_vol, attribute_vols, attributes)

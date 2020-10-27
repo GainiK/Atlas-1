@@ -68,7 +68,7 @@ def prepare_scannet_scene(scene, path, path_meta, verbose=2):
         print('preparing %s'%scene)
 
     folder, scene = scene.split('/')
-    has_semantic_labels = (folder=='scans')
+    has_semantic_labels = False
 
     data = {'dataset': 'scannet',
             'path': path,
@@ -96,18 +96,10 @@ def prepare_scannet_scene(scene, path, path_meta, verbose=2):
         data['instances'] = {seg['id']+1:
                                 label_mapping[seg['label']] for seg in seg_groups}
 
-
-    # get camera intrinsics
-    # we use color camera intrinsics and resize depth to match
-    with open(os.path.join(path, folder, scene, '%s.txt' % scene)) as info_f:
-        info = [line.rstrip().split(' = ') for line in info_f]
-        info = {key:value for key, value in info}
-        intrinsics = [
-            [float(info['fx_color']), 0, float(info['mx_color'])],
-            [0, float(info['fy_color']), float(info['my_color'])],
-            [0, 0, 1]]
-
-
+    intrinsics = [
+        [462.138671875, 0, 320.0],
+        [0, 462.138671875, 240.0],
+        [0, 0, 1]]
     
     frame_ids = os.listdir(os.path.join(path, folder, scene, 'color'))
     frame_ids = [int(os.path.splitext(frame)[0]) for frame in frame_ids]

@@ -87,13 +87,13 @@ def process(info_file, save_path, total_scenes_index, total_scenes_count):
     # get info about tsdf
     file_tsdf_pred = os.path.join(save_path, '%s.npz'%scene)
     temp = TSDF.load(file_tsdf_pred)
-    voxel_size = int(temp.voxel_size*100)
+    voxel_size = int(temp.voxel_size*1000000)
     
     # re-fuse to remove hole filling since filled holes are penalized in 
     # mesh metrics
     vol_dim = list(temp.tsdf_vol.shape)
     origin = temp.origin
-    tsdf_fusion = TSDFFusion(vol_dim, float(voxel_size)/100, origin, color=False)
+    tsdf_fusion = TSDFFusion(vol_dim, float(voxel_size)/1000000, origin, color=False)
     device = tsdf_fusion.device
 
     # mesh renderer
@@ -139,7 +139,7 @@ def process(info_file, save_path, total_scenes_index, total_scenes_count):
     tsdf_fusion.get_tsdf().get_mesh().export(file_mesh_trim)
 
     # eval tsdf
-    file_tsdf_trgt = dataset.info['file_name_vol_%02d'%voxel_size]
+    file_tsdf_trgt = dataset.info['file_name_vol_%05d'%voxel_size]
     metrics_tsdf = eval_tsdf(file_tsdf_pred, file_tsdf_trgt)
 
     # eval trimed mesh

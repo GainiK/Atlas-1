@@ -49,7 +49,19 @@ if __name__ == "__main__":
         save_top_k=-1,
         period=cfg.TRAINER.CHECKPOINT_PERIOD)
 
+    # checkpoint = torch.load('/home/gaini/Atlas/results/release/semseg/final.ckpt', map_location='cpu')
+    # if 'state_dict' in checkpoint:
+    #     #print('inside')
+    #     checkpoint['state_dict'].pop("heads3d.heads.1.decoders.0.weight")
+    #     checkpoint['state_dict'].pop("heads3d.heads.1.decoders.1.weight")
+    #     checkpoint['state_dict'].pop("heads3d.heads.1.decoders.2.weight")
+    #     #checkpoint['state_dict'].pop('decoder.last_conv.8.bias')
+    #     model.load_state_dict(checkpoint['state_dict'])
+
+    #model.load_state_dict(checkpoint['state_dict'], strict=False)
+
     trainer = pl.Trainer(
+        #resume_from_checkpoint=checkpoint,
         logger=logger,
         checkpoint_callback=checkpoint_callback,
         check_val_every_n_epoch=cfg.TRAINER.CHECKPOINT_PERIOD,

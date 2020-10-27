@@ -42,10 +42,10 @@ def process(info_file, model, num_frames, save_path, total_scenes_index, total_s
                            voxel_types=model.voxel_types, num_frames=num_frames)
 
     # compute voxel origin
-    if 'file_name_vol_%02d'%voxel_scale in dataset.info:
+    if 'file_name_vol_%05d'%voxel_scale in dataset.info:
         # compute voxel origin from ground truth
-        tsdf_trgt = dataset.get_tsdf()['vol_%02d'%voxel_scale]
-        voxel_size = float(voxel_scale)/100
+        tsdf_trgt = dataset.get_tsdf()['vol_%05d'%voxel_scale]
+        voxel_size = float(voxel_scale)/1000000
         # shift by integer number of voxels for padding
         shift = torch.tensor([.5, .5, .5])//voxel_size
         offset = tsdf_trgt.origin - shift*voxel_size

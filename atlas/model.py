@@ -110,7 +110,7 @@ class VoxelNet(pl.LightningModule):
         self.voxel_dim_train = cfg.VOXEL_DIM_TRAIN
         self.voxel_dim_val = cfg.VOXEL_DIM_VAL
         self.voxel_dim_test = cfg.VOXEL_DIM_TEST
-        self.origin = torch.tensor([0,0,0]).view(1,3)
+        self.origin = torch.tensor([-0.2, -0.2, 0]).view(1,3)
 
         self.batch_size_train = cfg.DATA.BATCH_SIZE_TRAIN
         self.num_frames_train = cfg.DATA.NUM_FRAMES_TRAIN
@@ -120,7 +120,7 @@ class VoxelNet(pl.LightningModule):
         self.batch_backbone2d_time = cfg.TRAINER.BATCH_BACKBONE2D_TIME
         self.finetune3d = cfg.TRAINER.FINETUNE3D
         self.voxel_types = cfg.MODEL.HEADS3D.HEADS
-        self.voxel_sizes = [int(cfg.VOXEL_SIZE*100)*2**i for i in 
+        self.voxel_sizes = [int(cfg.VOXEL_SIZE*1000000)*2**i for i in
                             range(len(cfg.MODEL.BACKBONE3D.LAYERS_DOWN)-1)]
 
         self.initialize_volume()
@@ -286,7 +286,7 @@ class VoxelNet(pl.LightningModule):
             list of TSDFs (one TSDF per scene in the batch)
         """
         
-        key = 'vol_%02d'%self.voxel_sizes[0] # only get vol of final resolution
+        key = 'vol_%05d'%self.voxel_sizes[0] # only get vol of final resolution
         out = []
         batch_size = len(batch[key+'_tsdf'])
 
@@ -331,7 +331,7 @@ class VoxelNet(pl.LightningModule):
         transform = []
         transform += [transforms.ResizeImage((640,480)),
                       transforms.ToTensor(),
-                      transforms.InstanceToSemseg('nyu40'),
+                      #transforms.InstanceToSemseg(),
                       transforms.RandomTransformSpace(
                           voxel_dim, random_rotation, random_translation,
                           paddingXY, paddingZ),

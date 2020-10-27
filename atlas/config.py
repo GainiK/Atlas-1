@@ -42,19 +42,132 @@ CN = CfgNode
 
 
 _C = CN()
-_C.LOG_DIR = "results"
-_C.VOXEL_SIZE = .04
-_C.VOXEL_DIM_TRAIN = [160,160,64]
-_C.VOXEL_DIM_VAL = [256,256,96]
-_C.VOXEL_DIM_TEST = [416,416,128]
+_C.LOG_DIR = "logs_atlas_cleargrasp"
+_C.VOXEL_SIZE = 0.003125
+_C.VOXEL_DIM_TRAIN = [128, 128, 64]
+_C.VOXEL_DIM_VAL = [128, 128, 64]
+_C.VOXEL_DIM_TEST = [128, 128, 64]
 
-_C.DATASETS_TRAIN = ['data/scannet_train.txt']
-_C.DATASETS_VAL = ['data/scannet_val.txt']
+_C.DATASETS_TRAIN = ['/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0000/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0001/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0002/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0003/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0004/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0005/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0006/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0007/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0008/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0009/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0010/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0011/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0012/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0013/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0014/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0015/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0016/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0017/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0018/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0019/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0020/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0021/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0022/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0023/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0024/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0025/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0026/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0027/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0028/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0029/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0030/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0031/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0032/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0033/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0034/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0035/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0036/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0037/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0038/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0039/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0040/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0041/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0042/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0043/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0044/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0045/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0046/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0047/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0048/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0049/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0050/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0051/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0052/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0053/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0054/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0055/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0056/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0057/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0058/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0059/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0060/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0061/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0062/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0063/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0064/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0065/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0066/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0067/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0068/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0069/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0070/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0071/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0072/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0073/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0074/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0075/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0076/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0077/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0078/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0079/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0080/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0081/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0082/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0083/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0084/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0085/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0086/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0087/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0088/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0089/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0090/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0091/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0092/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0093/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0094/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0095/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0096/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0097/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0098/info.json',
+                     '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans/scene0099/info.json']
+
+_C.DATASETS_VAL = ['/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0100/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0101/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0102/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0103/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0104/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0105/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0106/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0107/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0108/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0109/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0110/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0111/info.json',
+                   '/home/gaini/scannet_cleargrasp/prepared_data/scannet/scans_test/scene0112/info.json']
+
 
 _C.DATA = CN()
 _C.DATA.BATCH_SIZE_TRAIN = 1 # batch size per gpu
-_C.DATA.NUM_FRAMES_TRAIN = 50
-_C.DATA.NUM_FRAMES_VAL = 500
+_C.DATA.NUM_FRAMES_TRAIN = 8
+_C.DATA.NUM_FRAMES_VAL = 8
 _C.DATA.FRAME_SELECTION = 'random'
 _C.DATA.RANDOM_ROTATION_3D = True
 _C.DATA.RANDOM_TRANSLATION_3D = True
@@ -91,7 +204,7 @@ _C.MODEL.PIXEL_STD = [1., 1., 1.]
 _C.MODEL.BACKBONE = CN()
 _C.MODEL.BACKBONE.NAME = "build_resnet_fpn_backbone"
 _C.MODEL.BACKBONE.FREEZE_AT = 2
-_C.MODEL.BACKBONE.WEIGHTS = "weights/R-50.pth" # pretrained weights
+_C.MODEL.BACKBONE.WEIGHTS = "/home/gaini/Atlas/weights/R-50.pth" # pretrained weights
 _C.MODEL.RESNETS = CN()
 _C.MODEL.RESNETS.DEPTH = 50
 _C.MODEL.RESNETS.OUT_FEATURES = ["res2", "res3", "res4", "res5"]
@@ -140,11 +253,6 @@ _C.MODEL.HEADS3D.SEMSEG.NUM_CLASSES = 41
 _C.MODEL.HEADS3D.SEMSEG.LOSS_WEIGHT = .05
 _C.MODEL.HEADS3D.COLOR = CN()
 _C.MODEL.HEADS3D.COLOR.LOSS_WEIGHT = 1.
-
-
-
-
-
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Atlas Training")

@@ -168,7 +168,7 @@ def transform_space(data, transform, voxel_dim, origin):
         # compute voxel_dim for this voxel_size
         scale = voxel_size/min(voxel_sizes)
         vd = [int(vd/scale) for vd in voxel_dim]
-        key = 'vol_%02d'%voxel_size
+        key = 'vol_%05d'%voxel_size
 
         # do transform
         data[key] = data[key].transform(transform, vd, origin)
@@ -222,7 +222,7 @@ class RandomTransformSpace(object):
 
         # pick a single tsdf to compute our transform
         voxel_size = min(voxel_sizes)
-        tsdf = data['vol_%02d'%voxel_size]
+        tsdf = data['vol_%05d'%voxel_size]
 
         # construct rotaion matrix about z axis
         if self.random_rotation:

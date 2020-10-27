@@ -72,7 +72,7 @@ class TSDFHead(nn.Module):
         self.sparse_threshold = cfg.MODEL.HEADS3D.TSDF.SPARSE_THRESHOLD
 
         scales = len(cfg.MODEL.BACKBONE3D.CHANNELS)-1
-        final_size = int(cfg.VOXEL_SIZE*100)
+        final_size = int(cfg.VOXEL_SIZE*1000000)
 
         if self.multi_scale:
             self.voxel_sizes = [final_size*2**i for i in range(scales)][::-1]
@@ -100,7 +100,7 @@ class TSDFHead(nn.Module):
 
             # use previous scale to sparsify current scale
             if self.split_loss=='pred' and i>0:
-                tsdf_prev = output['vol_%02d_tsdf'%self.voxel_sizes[i-1]]
+                tsdf_prev = output['vol_%05d_tsdf'%self.voxel_sizes[i-1]]
                 tsdf_prev = F.interpolate(tsdf_prev, scale_factor=2)
                 # FIXME: when using float16, why is interpolate casting to float32?
                 tsdf_prev = tsdf_prev.type_as(tsdf)
@@ -109,12 +109,12 @@ class TSDFHead(nn.Module):
                 tsdf[~mask_surface_pred_prev] = tsdf_prev[~mask_surface_pred_prev].sign()*.999
                 mask_surface_pred.append( mask_surface_pred_prev )
 
-            output['vol_%02d_tsdf'%self.voxel_sizes[i]] = tsdf
+            output['vol_%05d_tsdf'%self.voxel_sizes[i]] = tsdf
 
         # compute losses
         if targets is not None:
             for i, voxel_size in enumerate(self.voxel_sizes):
-                key = 'vol_%02d_tsdf'%voxel_size
+                key = 'vol_%05d_tsdf'%voxel_size
                 pred = output[key]
                 trgt = targets[key]
 
@@ -167,7 +167,7 @@ class SemSegHead(nn.Module):
         self.loss_weight = cfg.MODEL.HEADS3D.SEMSEG.LOSS_WEIGHT
 
         scales = len(cfg.MODEL.BACKBONE3D.CHANNELS)-1
-        final_size = int(cfg.VOXEL_SIZE*100)
+        final_size = int(cfg.VOXEL_SIZE*1000000)
 
         classes = cfg.MODEL.HEADS3D.SEMSEG.NUM_CLASSES
         if self.multi_scale:
@@ -189,14 +189,14 @@ class SemSegHead(nn.Module):
 
         for voxel_size, decoder, x in zip(self.voxel_sizes, self.decoders, xs):
             # compute semantic labels
-            key = 'vol_%02d_semseg'%voxel_size
+            key = 'vol_%05d_semseg'%voxel_size
             output[key] = decoder(x)
 
             # compute losses
             if targets is not None and key in targets:
                 pred = output[key]
                 trgt = targets[key]
-                mask_surface = targets['vol_%02d_tsdf'%voxel_size].squeeze(1).abs() < 1
+                mask_surface = targets['vol_%05d_tsdf'%voxel_size].squeeze(1).abs() < 1
 
                 loss = F.cross_entropy(pred, trgt, reduction='none', ignore_index=-1)
                 if mask_surface.sum()>0:
@@ -221,7 +221,7 @@ class ColorHead(nn.Module):
         self.loss_weight = cfg.MODEL.HEADS3D.COLOR.LOSS_WEIGHT
 
         scales = len(cfg.MODEL.BACKBONE3D.CHANNELS)-1
-        final_size = int(cfg.VOXEL_SIZE*100)
+        final_size = int(cfg.VOXEL_SIZE*1000000)
 
         if self.multi_scale:
             self.voxel_sizes = [final_size*2**i for i in range(scales)][::-1]
@@ -241,7 +241,7 @@ class ColorHead(nn.Module):
             xs = xs[-1:] # just use final scale
 
         for voxel_size, decoder, x in zip(self.voxel_sizes, self.decoders, xs):
-            key = 'vol_%02d_color'%voxel_size
+            key = 'vol_%05d_color'%voxel_size
             pred = torch.sigmoid(decoder(x)) * 255
             output[key] = pred
 
@@ -249,7 +249,7 @@ class ColorHead(nn.Module):
             if targets is not None and key in targets:
                 pred = output[key]
                 trgt = targets[key]
-                mask_surface = targets['vol_%02d_tsdf'%voxel_size].squeeze(1).abs() < 1
+                mask_surface = targets['vol_%05d_tsdf'%voxel_size].squeeze(1).abs() < 1
 
                 loss = F.l1_loss(pred, trgt, reduction='none').mean(1)
                 if mask_surface.sum()>0:

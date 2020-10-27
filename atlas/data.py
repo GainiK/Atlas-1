@@ -83,7 +83,7 @@ def map_tsdf(info, data, voxel_types, voxel_sizes):
 
     if len(voxel_types)>0:
         for scale in voxel_sizes:
-            data['vol_%02d'%scale] = TSDF.load(info['file_name_vol_%02d'%scale],
+            data['vol_%05d'%scale] = TSDF.load(info['file_name_vol_%05d'%scale],
                                                voxel_types)
     return data
 
@@ -202,7 +202,6 @@ class ScenesDataset(torch.utils.data.Dataset):
         info = load_info_json(self.info_files[i])
 
         frame_ids = self.get_frame_ids(info)
-        # print(frame_ids)
         frames = [map_frame(info['frames'][i], self.frame_types)
                   for i in frame_ids]
 
